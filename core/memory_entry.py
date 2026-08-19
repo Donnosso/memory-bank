@@ -21,7 +21,7 @@ def capture_memory():
 
 
 def display_memories(memories):
-    #if memories == None or memories == []:
+    ###if memories == None or memories == [] or memories == ""###
     if not memories:
         print("No memories yet. Why don't you create some..")
         return
@@ -56,17 +56,31 @@ def delete_memory(memories, keyword):
         print(f"This memory {matching_memories[option_to_delete]} has been erased")
     return memories
 
+def filter_by_mood(memories, mood):
+    matching_mood = []
+    for m in memories:
+        if m['mood'] == mood:
+            matching_mood.append(m)
+    if not matching_mood:
+        print(f"You don't have this mood '{mood}' yet.")
+        return
+    return matching_mood
+
+
 capture_memory()
 
 #display_memories(memories)
 
-# search_key = input("What do you wish to recollect...? ")
+# search_key = input("What do you wish to recollect...? ").lower()
 # result = search_memories(memories, search_key)
 # if result:
 #     display_memories(result)
 
 
-keyword = input(f" Search for a memory to delete: ")
-delete_memory(memories, keyword)
-display_memories(memories)
+# keyword = input(f" Search for a memory to delete: ")
+# delete_memory(memories, keyword)
+# display_memories(memories)
+
+filter_mood = input("Filter memories by mood: ").lower()
+print(filter_by_mood(memories, filter_mood))
 
