@@ -1,6 +1,7 @@
-from models.memory import Memory
+from textwrap import indent
 
-memories = []
+from models.memory import Memory
+import json
 
 def capture_memory():
     add_another = "y"
@@ -12,13 +13,30 @@ def capture_memory():
 
         ###CREATE A memory object FROM THE MEMORY CLASS###
         memory = Memory(title, date, mood, journal)
-
         add_another = input("Add another memory(y/n): ")
         ###MEMORIES WILL NOW BECOME A LIST OF memory objects###
         memories.append(memory)
 
     return
 
+def save_memories(memories, filename):
+    memories_in_dict = []
+    for m in memories:
+        dict = m.to_dict()
+        memories_in_dict.append(dict)
+    with open(filename, 'w') as f:
+        json.dump(memories_in_dict, f, indent=4)
+    return
+
+def load_memories(filename):
+    with open(filename, 'r') as f:
+        data = json.load(f)
+        m_list = []
+        for m in data:
+            # new_memory = Memory(m["title"], m["date"], m["mood"], m["journal"])
+            new_memory = Memory.from_dict(m)
+            m_list.append(new_memory)
+        return m_list
 
 def display_memories(memories):
     ###if memories == None or memories == [] or memories == ""###
@@ -66,15 +84,20 @@ def filter_by_mood(memories, mood):
         return
     return matching_mood
 
+try:
+    memories = load_memories("memory_vault")
+except FileNotFoundError:
+    memories = []
 
 capture_memory()
+save_memories(memories, "memory_vault")
 
 # display_memories(memories)
 
-search_key = input("What do you wish to recollect...? ").lower()
-result = search_memories(memories, search_key)
-if result:
-    display_memories(result)
+# search_key = input("What do you wish to recollect...? ").lower()
+# result = search_memories(memories, search_key)
+# if result:
+#     display_memories(result)
 
 
 # keyword = input(f" Search for a memory to delete: ")
